@@ -91,7 +91,30 @@
   #intro { position:fixed; inset:0; z-index:300; background:radial-gradient(circle at 50% 45%,#FFF6D6,#FFFCF0 70%); display:flex; align-items:center; justify-content:center; transition:opacity 1.3s ease; cursor:pointer; }
   .iline { position:absolute; padding:0 2rem; text-align:center; font:italic 400 1.55rem/1.5 'Playfair Display',serif; opacity:0; filter:blur(8px); transform:translateY(14px); transition:opacity 1.4s ease, transform 1.4s ease, filter 1.4s ease; }
   .iline.show { opacity:1; filter:blur(0); transform:none; }
+  #pl { position:absolute; bottom:4.4rem; display:flex; flex-direction:column; align-items:center; gap:.55rem; font:400 .72rem 'Jost',sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#3B2A1B99; transition:opacity .8s ease; }
+  .plbar { width:150px; height:3px; border-radius:3px; background:#3B2A1B1f; overflow:hidden; }
+  .plbar i { display:block; height:100%; width:0; background:linear-gradient(90deg,#F2B71E,#E39A0B); transition:width .35s ease; }
   #intro small { position:absolute; bottom:2rem; font-size:.72rem; letter-spacing:.25em; text-transform:uppercase; color:#3B2A1B80; }
+
+  /* ===== Schermata finta "scusa per il danno" ===== */
+  #gate { position:fixed; inset:0; z-index:400; background:#fff; color:#222; font-family:Arial,Helvetica,sans-serif; overflow:auto; transition:opacity .9s ease; }
+  .g-fake { max-width:420px; margin:0 auto; padding:2rem 1.3rem 3rem; line-height:1.55; }
+  .g-tag { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:#777; margin:0 0 1rem; }
+  .g-fake h1 { font-size:1.55rem; line-height:1.25; margin:0 0 1rem; }
+  .g-fake p { font-size:1rem; margin:0 0 .9rem; }
+  .g-data { margin:1.4rem 0; border:1px solid #ddd; border-radius:8px; }
+  .g-data div { display:flex; justify-content:space-between; gap:1rem; padding:.7rem .9rem; font-size:.92rem; border-bottom:1px solid #eee; }
+  .g-data div:last-child { border-bottom:0; } .g-data span { color:#666; } .g-data b { text-align:right; }
+  #gate-btn { width:100%; padding:.95rem; border:0; border-radius:8px; background:#1a73e8; color:#fff; font-size:1rem; font-weight:700; cursor:pointer; }
+  #gate-prog { font-size:.9rem; color:#555; } .gbar { margin-top:.6rem; height:6px; border-radius:6px; background:#e5e5e5; overflow:hidden; } .gbar i { display:block; height:100%; width:0; background:#1a73e8; transition:width .2s linear; }
+  .g-rev { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; background:radial-gradient(circle at 50% 42%,#FFE680,#F7C531 55%,#E39A0B); opacity:0; pointer-events:none; transition:opacity .5s ease; }
+  #gate.rev .g-rev { opacity:1; }
+  #g-flower { width:7rem; height:7rem; margin-bottom:1.2rem; }
+  .g-rev h2 { margin:0; font:600 3.1rem/1.05 'Playfair Display',serif; color:#3B2A1B; }
+  .g-rev p { margin:1.1rem 0 0; font:500 .9rem 'Jost',sans-serif; letter-spacing:.32em; text-transform:uppercase; color:#3B2A1B; opacity:0; }
+  #gate.rev .g-rev h2 { animation:pop .7s cubic-bezier(.2,1.6,.4,1) both; }
+  #gate.rev .g-rev p { animation:slideFade 1s ease 1.3s both; }
+  @keyframes pop { from{opacity:0;transform:scale(.4) rotate(-6deg)} to{opacity:1;transform:none} }
 
   /* ===== Effetti ===== */
   .bg-heart { position:fixed; top:0; z-index:1; pointer-events:none; animation:floatUp linear forwards; }
@@ -185,7 +208,26 @@
   <h2 class="iline">Poi, un giorno, sei arrivata tu.</h2>
   <h2 class="iline">Ho ripensato ai nostri momenti più belli…</h2>
   <h2 class="iline">e volevo ricordarteli così, uno alla volta.</h2>
+  <div id="pl"><span id="pl-t">Preparo i ricordi… 0%</span><div class="plbar"><i id="pl-i"></i></div></div>
   <small>tocca per saltare</small>
+</div>
+
+<!-- SCHERMATA FINTA: "scusa per il danno alla macchina" (si disattiva con FAKE_GATE = false) -->
+<div id="gate" class="hidden">
+  <div class="g-fake">
+    <p class="g-tag">Nuovo messaggio · Sinistro stradale</p>
+    <h1>Scusami per il danno alla macchina</h1>
+    <p>Ti ho colpito mentre eri parcheggiato e non sono riuscito a rintracciarti. Mi dispiace davvero.</p>
+    <p>Qui sotto trovi i miei dati e quelli dell'assicurazione, così sistemiamo tutto nel modo più semplice possibile.</p>
+    <div class="g-data">
+      <div><span>Conducente</span><b>Mario Rossi</b></div>
+      <div><span>Compagnia</span><b>Assicura Più S.p.A.</b></div>
+      <div><span>N. sinistro</span><b>2026-1010-48</b></div>
+    </div>
+    <button id="gate-btn">Apri i documenti del sinistro</button>
+    <div id="gate-prog" class="hidden"><span id="gate-pct">Caricamento documenti… 0%</span><div class="gbar"><i id="gate-i"></i></div></div>
+  </div>
+  <div class="g-rev"><div id="g-flower" aria-hidden="true"></div><h2>SCHERZAVO 😝</h2><p>Torniamo alle cose serie</p></div>
 </div>
 
 <main id="main">
@@ -310,15 +352,44 @@ $('#memories').innerHTML = MEMORIES.map((m, i) => `
 const vio = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: .4 });
 document.querySelectorAll('video').forEach(v => vio.observe(v));
 
-/* Caricamento intelligente: le foto si scaricano durante l'intro,
-   i video solo quando mancano un paio di schermate (così non si bloccano a vicenda) */
-MEMORIES.forEach(m => { if (m.img) { const i = new Image(); i.src = m.img; } });
-const near = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  const v = e.target; near.unobserve(v);
-  if (v.readyState === 0) { v.preload = 'auto'; v.load(); }
-}), { rootMargin: '250% 0px' });
-document.querySelectorAll('video').forEach(v => near.observe(v));
+/* Precaricamento completo: foto e video vengono scaricati per intero PRIMA di mostrare i ricordi.
+   I video diventano file locali in memoria (blob), così partono subito, senza attese né buchi. */
+const MEDIA_TIMEOUT = 60000;                       // se la rete è lentissima, dopo 60s parte comunque
+const frac = MEMORIES.map(() => 0);
+function updPl() {
+  const pct = Math.round(frac.reduce((x, y) => x + y, 0) / frac.length * 100);
+  $('#pl-i').style.width = pct + '%';
+  $('#pl-t').textContent = pct < 100 ? `Preparo i ricordi… ${pct}%` : 'Tutto pronto 🌻';
+}
+async function fetchBlob(url, onProg) {
+  const r = await fetch(url); if (!r.ok) throw new Error(r.status);
+  const len = +r.headers.get('content-length') || 0;
+  if (!r.body || !len) { const b = await r.blob(); onProg(1); return b; }
+  const rd = r.body.getReader(), chunks = []; let got = 0;
+  for (;;) { const { done, value } = await rd.read(); if (done) break; chunks.push(value); got += value.length; onProg(got / len); }
+  return new Blob(chunks, { type: 'video/mp4' });
+}
+async function preloadAll() {
+  await Promise.all(MEMORIES.map(async (m, i) => {
+    try {
+      if (m.img) {
+        await new Promise(res => { const im = new Image(); im.onload = im.onerror = res; im.src = m.img; });
+      } else {
+        const b = await fetchBlob(m.video, f => { frac[i] = f * .98; updPl(); });
+        const url = URL.createObjectURL(new Blob([b], { type: 'video/mp4' }));
+        document.querySelectorAll('video').forEach(v => {
+          const src = v.querySelector('source');
+          if (src && src.getAttribute('src') === m.video) { src.remove(); v.preload = 'auto'; v.src = url; v.load(); }
+        });
+      }
+    } catch (e) {                                   // es. prova da file locale: lascia il caricamento normale
+      document.querySelectorAll('video').forEach(v => { const src = v.querySelector('source'); if (src && src.getAttribute('src') === m.video) { v.preload = 'auto'; v.load(); } });
+    }
+    frac[i] = 1; updPl();
+  }));
+}
+const mediaP = preloadAll();
+const mediaReady = () => Promise.race([mediaP, wait(MEDIA_TIMEOUT)]);
 document.querySelectorAll('.snd').forEach(b => b.addEventListener('click', () => {
   const v = b.parentElement.querySelector('video');
   v.muted = !v.muted; if (!v.muted) v.play().catch(() => {});
@@ -422,21 +493,53 @@ function observe() {
 }
 function endIntro() {
   if (introDone) return; introDone = true;
-  $('#intro').style.opacity = 0;
+  $('#pl').style.opacity = 0; $('#intro').style.opacity = 0;
   setTimeout(() => {
     $('#intro').style.display = 'none'; $('#main').style.opacity = 1; startPetals(); observe();
     setTimeout(() => $('#hero-name').classList.add('blurin'), 500);   // il nome sboccia dopo l'intro
   }, 1300);
 }
-$('#intro').addEventListener('click', endIntro);
-(async () => {
+let skipping = false;
+$('#intro').addEventListener('click', async () => {      // tocco = salta l'intro, ma aspetta comunque i media
+  skipping = true; lines.forEach(l => l.classList.remove('show'));
+  await mediaReady(); endIntro();
+});
+const FAKE_GATE = true;      // metti false per togliere la schermata finta del danno
+
+async function startIntro() {
   await wait(700);
-  for (let i = 0; i < lines.length && !introDone; i++) {
+  for (let i = 0; i < lines.length && !skipping; i++) {
     lines[i].classList.add('show'); await wait(2900);
     if (i < lines.length - 1) { lines[i].classList.remove('show'); await wait(1000); }
   }
-  endIntro();
-})();
+  if (!skipping) { await mediaReady(); endIntro(); }
+}
+
+/* La schermata finta usa il tempo di attesa per scaricare davvero foto e video.
+   Quando è tutto pronto: "SCHERZAVO" e parte il sito vero. */
+function runGate() {
+  const g = $('#gate'); g.classList.remove('hidden'); $('#pl').style.display = 'none';
+  $('#g-flower').innerHTML = sunflower(16);
+  $('#gate-btn').onclick = async () => {
+    $('#gate-btn').classList.add('hidden'); $('#gate-prog').classList.remove('hidden');
+    const t0 = Date.now(), MIN = 4500; let ready = false;
+    mediaReady().then(() => ready = true);
+    await new Promise(res => {
+      const iv = setInterval(() => {
+        const real = frac.reduce((x, y) => x + y, 0) / frac.length * 100, el = (Date.now() - t0) / MIN * 95;
+        const fin = ready && Date.now() - t0 >= MIN, pct = fin ? 100 : Math.min(real, el, 95);
+        $('#gate-i').style.width = pct + '%'; $('#gate-pct').textContent = `Caricamento documenti… ${Math.round(pct)}%`;
+        if (fin) { clearInterval(iv); res(); }
+      }, 120);
+    });
+    await wait(500);
+    g.classList.add('rev'); if (navigator.vibrate) navigator.vibrate([80, 60, 80]);
+    await wait(3800);
+    g.style.opacity = 0; await wait(900); g.style.display = 'none';
+    startIntro();
+  };
+}
+if (FAKE_GATE) runGate(); else startIntro();
 
 /* ================= Finale con suspense ================= */
 let started = false, ready = false, saidYes = false;
