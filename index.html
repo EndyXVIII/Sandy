@@ -337,8 +337,8 @@ const ORN = `<div class="orn" aria-hidden="true"><svg viewBox="0 0 24 24"><path 
 $('#memories').innerHTML = MEMORIES.map((m, i) => `
   <section class="mem">
     <figure class="polaroid ${i % 2 ? 'tr' : 'tl'}">
-      ${m.video ? `<video muted loop playsinline preload="none"><source src="${m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
-                : `<img src="${m.img}" alt="${m.alt}" decoding="async">`}
+      ${m.video ? `<video data-m="${i}" muted loop playsinline preload="none"><source src="${m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
+                : `<img data-m="${i}" src="${m.img}" alt="${m.alt}" decoding="async">`}
       <figcaption>${m.cap}</figcaption>
     </figure>
     <div class="glass card">
@@ -369,24 +369,54 @@ async function fetchBlob(url, onProg) {
   for (;;) { const { done, value } = await rd.read(); if (done) break; chunks.push(value); got += value.length; onProg(got / len); }
   return new Blob(chunks, { type: 'video/mp4' });
 }
+/* Tollerante su maiuscole/minuscole: prova .jpg/.JPG/.jpeg e .mp4/.MP4/.mov/.MOV se il nome esatto non esiste */
+function variants(u) {
+  const m = u.match(/^(.*)\.([^.\/]+)$/); if (!m) return [u];
+  const ex = new Set([m[2], m[2].toLowerCase(), m[2].toUpperCase()]);
+  if (/^jpe?g$/i.test(m[2])) ['jpg', 'JPG', 'jpeg', 'JPEG'].forEach(x => ex.add(x));
+  if (/^(mp4|mov|m4v)$/i.test(m[2])) ['mp4', 'MP4', 'mov', 'MOV', 'm4v'].forEach(x => ex.add(x));
+  return [...ex].map(x => m[1] + '.' + x);
+}
+async function loadImg(u) {
+  for (const c of variants(u)) {
+    const ok = await new Promise(res => { const im = new Image(); im.onload = () => res(true); im.onerror = () => res(false); im.src = c; });
+    if (ok) return c;
+  }
+  return null;
+}
+const mediaStatus = MEMORIES.map(m => ({ file: m.img || m.video, res: '…', kb: 0 }));
+function showDebug() {      // apri il sito con ?debug in fondo al link per vedere quali file mancano
+  const d = document.createElement('div');
+  d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#000d;color:#fff;font:11px/1.5 monospace;padding:8px;max-height:60vh;overflow:auto';
+  d.innerHTML = mediaStatus.map(x => `<div style="color:${x.res === 'ok' ? '#8f8' : '#f88'}">${x.res} — ${x.file}${x.kb ? ' (' + x.kb + ' KB)' : ''}</div>`).join('') + '<div style="opacity:.7">tocca per chiudere</div>';
+  d.onclick = () => d.remove(); document.body.appendChild(d);
+}
 async function preloadAll() {
   await Promise.all(MEMORIES.map(async (m, i) => {
+    const st = mediaStatus[i];
     try {
       if (m.img) {
-        await new Promise(res => { const im = new Image(); im.onload = im.onerror = res; im.src = m.img; });
+        const w = await loadImg(m.img);
+        if (w) { st.file = w; st.res = 'ok'; const el = document.querySelector(`img[data-m="${i}"]`); if (el && el.getAttribute('src') !== w) el.src = w; }
+        else st.res = 'NON TROVATO';
       } else {
-        const b = await fetchBlob(m.video, f => { frac[i] = f * .98; updPl(); });
-        const url = URL.createObjectURL(new Blob([b], { type: 'video/mp4' }));
-        document.querySelectorAll('video').forEach(v => {
-          const src = v.querySelector('source');
-          if (src && src.getAttribute('src') === m.video) { src.remove(); v.preload = 'auto'; v.src = url; v.load(); }
-        });
+        const v = document.querySelector(`video[data-m="${i}"]`);
+        let blob = null;
+        for (const c of variants(m.video)) { try { blob = await fetchBlob(c, f => { frac[i] = f * .97; updPl(); }); st.file = c; break; } catch (e) {} }
+        if (!blob) { st.res = 'NON TROVATO'; v.preload = 'auto'; v.load(); }
+        else {
+          st.kb = Math.round(blob.size / 1024);
+          const url = URL.createObjectURL(new Blob([blob], { type: 'video/mp4' }));
+          const s0 = v.querySelector('source'); if (s0) s0.remove();
+          v.preload = 'auto'; v.src = url;
+          const ok = await new Promise(res => { v.onloadedmetadata = () => res(true); v.onerror = () => res(false); setTimeout(() => res(null), 2500); v.load(); });
+          st.res = ok === false ? 'CODEC NON SUPPORTATO' : 'ok';
+        }
       }
-    } catch (e) {                                   // es. prova da file locale: lascia il caricamento normale
-      document.querySelectorAll('video').forEach(v => { const src = v.querySelector('source'); if (src && src.getAttribute('src') === m.video) { v.preload = 'auto'; v.load(); } });
-    }
+    } catch (e) { st.res = 'ERRORE'; }
     frac[i] = 1; updPl();
   }));
+  if (location.search.includes('debug')) showDebug();
 }
 const mediaP = preloadAll();
 const mediaReady = () => Promise.race([mediaP, wait(MEDIA_TIMEOUT)]);
