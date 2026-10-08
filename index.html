@@ -295,8 +295,8 @@ const ORN = `<div class="orn" aria-hidden="true"><svg viewBox="0 0 24 24"><path 
 $('#memories').innerHTML = MEMORIES.map((m, i) => `
   <section class="mem">
     <figure class="polaroid ${i % 2 ? 'tr' : 'tl'}">
-      ${m.video ? `<video muted loop playsinline preload="metadata"><source src="${m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
-                : `<img src="${m.img}" alt="${m.alt}" loading="lazy" decoding="async">`}
+      ${m.video ? `<video muted loop playsinline preload="none"><source src="${m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
+                : `<img src="${m.img}" alt="${m.alt}" decoding="async">`}
       <figcaption>${m.cap}</figcaption>
     </figure>
     <div class="glass card">
@@ -309,6 +309,16 @@ $('#memories').innerHTML = MEMORIES.map((m, i) => `
 
 const vio = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: .4 });
 document.querySelectorAll('video').forEach(v => vio.observe(v));
+
+/* Caricamento intelligente: le foto si scaricano durante l'intro,
+   i video solo quando mancano un paio di schermate (così non si bloccano a vicenda) */
+MEMORIES.forEach(m => { if (m.img) { const i = new Image(); i.src = m.img; } });
+const near = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const v = e.target; near.unobserve(v);
+  if (v.readyState === 0) { v.preload = 'auto'; v.load(); }
+}), { rootMargin: '250% 0px' });
+document.querySelectorAll('video').forEach(v => near.observe(v));
 document.querySelectorAll('.snd').forEach(b => b.addEventListener('click', () => {
   const v = b.parentElement.querySelector('video');
   v.muted = !v.muted; if (!v.muted) v.play().catch(() => {});
