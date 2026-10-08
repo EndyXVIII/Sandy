@@ -319,12 +319,12 @@ const MEMORIES = [
     p:'Il braccialetto del pronto soccorso. Mi hai scritto e sono corso subito da te. Esserci l\'uno per l\'altra significa anche questo: affrontare i piccoli imprevisti tenendosi per mano (anche con un dito rotto).' },
   { img:'croazia.jpg', alt:'Noi in Croazia', cap:'Croazia', h:'Tuffi e Plodine',
     p:'I nostri tuffi in Croazia. Non so come fai, ma mi regali una felicità che non sapevo di poter avere. Perfino la spesa alla Plodine, con te, è diventata un ricordo bellissimo.' },
-  { video:'croazia_video.MP4', cap:'un istante di noi', h:'Il mio posto preferito',
+  { video:'croazia_video.mp4', cap:'un istante di noi', h:'Il mio posto preferito',
     p:'Quegli attimi in cui il tempo si ferma e tu mi guardi. Torno sempre su questo video.' },
   { video:'strong_ovviamente.mp4', sound:true, cap:'strong, ovviamente', h:'Zero esitazioni',
     p:'Il cameriere ci chiede se vogliamo lo shottino strong o light. E tu, senza un attimo di dubbio, rispondi nel modo più sicuro del mondo. Da quel giorno è una delle mie frasi preferite.',
     quote:'Strong, ovviamente.', who:'tu, senza esitare' },
-  { img:'laurea_mia.JPG', alt:'La mia laurea a Padova', cap:'Padova, la mia laurea', h:'Un traguardo in due',
+  { img:'laurea_mia.jpg', alt:'La mia laurea a Padova', cap:'Padova, la mia laurea', h:'Un traguardo in due',
     p:'Averti accanto durante la magistrale a Padova ha reso quella giornata semplicemente perfetta, e mi ha fatto capire quanto vorrei condividere la vita con te.',
     quote:'Lo sai che ti sto odiando, vero?', who:'tu, quel giorno' },
   { video:'food_blogger.mp4', sound:true, cap:'food blogger', h:'Recensione ufficiale',
@@ -332,13 +332,16 @@ const MEMORIES = [
   { video:'mini_sandy.mp4', sound:true, cap:'mini Sandy', h:'Mini Sandy',
     p:'Una festa di laurea, tu ripresa dall\'alto, e sembri davvero piccolissima. Mini Sandy: la più piccola della sala, ma quella che noto per prima.' }
 ];
+/* Dove cercare i file: nelle MEMORIES basta il nome. Il sito prova queste cartelle in ordine
+   (e anche maiuscole/minuscole diverse), quindi funziona anche se qualche file non è stato spostato. */
+const DIRS = { img: ['assets/photos/', 'assets/', 'photos/', ''], video: ['assets/videos/', 'assets/', 'videos/', ''] };
 const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 const ORN = `<div class="orn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${HP}" fill="#D23B3B" opacity=".85"/></svg></div>`;
 $('#memories').innerHTML = MEMORIES.map((m, i) => `
   <section class="mem">
     <figure class="polaroid ${i % 2 ? 'tr' : 'tl'}">
-      ${m.video ? `<video data-m="${i}" muted loop playsinline preload="none"><source src="${m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
-                : `<img data-m="${i}" src="${m.img}" alt="${m.alt}" decoding="async">`}
+      ${m.video ? `<video data-m="${i}" muted loop playsinline preload="none"><source src="${DIRS.video[0] + m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
+                : `<img data-m="${i}" src="${DIRS.img[0] + m.img}" alt="${m.alt}" decoding="async">`}
       <figcaption>${m.cap}</figcaption>
     </figure>
     <div class="glass card">
@@ -369,18 +372,26 @@ async function fetchBlob(url, onProg) {
   for (;;) { const { done, value } = await rd.read(); if (done) break; chunks.push(value); got += value.length; onProg(got / len); }
   return new Blob(chunks, { type: 'video/mp4' });
 }
-/* Tollerante su maiuscole/minuscole: prova .jpg/.JPG/.jpeg e .mp4/.MP4/.mov/.MOV se il nome esatto non esiste */
-function variants(u) {
-  const m = u.match(/^(.*)\.([^.\/]+)$/); if (!m) return [u];
-  const ex = new Set([m[2], m[2].toLowerCase(), m[2].toUpperCase()]);
-  if (/^jpe?g$/i.test(m[2])) ['jpg', 'JPG', 'jpeg', 'JPEG'].forEach(x => ex.add(x));
-  if (/^(mp4|mov|m4v)$/i.test(m[2])) ['mp4', 'MP4', 'mov', 'MOV', 'm4v'].forEach(x => ex.add(x));
-  return [...ex].map(x => m[1] + '.' + x);
+/* Ricerca tollerante: cartelle diverse, estensioni .jpg/.JPG/.mp4/.MP4/.mov, e nomi come mini_Sandy.MP4 */
+function candidates(file, kind) {
+  const m = file.match(/^(.*)\.([^.\/]+)$/), base = m ? m[1] : file, ext = m ? m[2] : '';
+  const exts = new Set([ext, ext.toLowerCase(), ext.toUpperCase()]);
+  (kind === 'img' ? ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'] : ['mp4', 'MP4', 'mov', 'MOV', 'm4v']).forEach(x => exts.add(x));
+  const cap = x => x.charAt(0).toUpperCase() + x.slice(1), w = base.split('_');
+  const bases = new Set([base, base.toLowerCase(), w.map((x, i) => i ? cap(x) : x).join('_'), w.map(cap).join('_')]);
+  const out = [];
+  for (const d of DIRS[kind]) for (const b of bases) for (const e of exts) out.push(d + b + '.' + e);
+  return out;
 }
-async function loadImg(u) {
-  for (const c of variants(u)) {
-    const ok = await new Promise(res => { const im = new Image(); im.onload = () => res(true); im.onerror = () => res(false); im.src = c; });
-    if (ok) return c;
+function exists(u, kind) {
+  if (kind === 'img') return new Promise(res => { const im = new Image(); im.onload = () => res(true); im.onerror = () => res(false); im.src = u; });
+  return fetch(u, { method: 'HEAD' }).then(r => r.ok && !/text\/html/.test(r.headers.get('content-type') || '')).catch(() => false);
+}
+async function findFile(file, kind) {
+  const list = candidates(file, kind), N = 6;
+  for (let i = 0; i < list.length; i += N) {
+    const grp = list.slice(i, i + N), res = await Promise.all(grp.map(c => exists(c, kind)));
+    const k = res.indexOf(true); if (k >= 0) return grp[k];
   }
   return null;
 }
@@ -396,13 +407,14 @@ async function preloadAll() {
     const st = mediaStatus[i];
     try {
       if (m.img) {
-        const w = await loadImg(m.img);
+        const w = await findFile(m.img, 'img');
         if (w) { st.file = w; st.res = 'ok'; const el = document.querySelector(`img[data-m="${i}"]`); if (el && el.getAttribute('src') !== w) el.src = w; }
         else st.res = 'NON TROVATO';
       } else {
         const v = document.querySelector(`video[data-m="${i}"]`);
         let blob = null;
-        for (const c of variants(m.video)) { try { blob = await fetchBlob(c, f => { frac[i] = f * .97; updPl(); }); st.file = c; break; } catch (e) {} }
+        const found = await findFile(m.video, 'video');
+        if (found) { try { blob = await fetchBlob(found, f => { frac[i] = f * .97; updPl(); }); st.file = found; } catch (e) {} }
         if (!blob) { st.res = 'NON TROVATO'; v.preload = 'auto'; v.load(); }
         else {
           st.kb = Math.round(blob.size / 1024);
