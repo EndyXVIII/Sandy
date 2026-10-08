@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF2C9">
-<title>Per te, Sandy 🌻</title>
+<title>Comunicazione Sinistro Aziendale</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Jost:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
@@ -96,17 +96,19 @@
   .plbar i { display:block; height:100%; width:0; background:linear-gradient(90deg,#F2B71E,#E39A0B); transition:width .35s ease; }
   #intro small { position:absolute; bottom:2rem; font-size:.72rem; letter-spacing:.25em; text-transform:uppercase; color:#3B2A1B80; }
 
-  /* ===== Schermata finta "scusa per il danno" ===== */
-  #gate { position:fixed; inset:0; z-index:400; background:#fff; color:#222; font-family:Arial,Helvetica,sans-serif; overflow:auto; transition:opacity .9s ease; }
-  .g-fake { max-width:420px; margin:0 auto; padding:2rem 1.3rem 3rem; line-height:1.55; }
-  .g-tag { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:#777; margin:0 0 1rem; }
-  .g-fake h1 { font-size:1.55rem; line-height:1.25; margin:0 0 1rem; }
-  .g-fake p { font-size:1rem; margin:0 0 .9rem; }
-  .g-data { margin:1.4rem 0; border:1px solid #ddd; border-radius:8px; }
-  .g-data div { display:flex; justify-content:space-between; gap:1rem; padding:.7rem .9rem; font-size:.92rem; border-bottom:1px solid #eee; }
-  .g-data div:last-child { border-bottom:0; } .g-data span { color:#666; } .g-data b { text-align:right; }
-  #gate-btn { width:100%; padding:.95rem; border:0; border-radius:8px; background:#1a73e8; color:#fff; font-size:1rem; font-weight:700; cursor:pointer; }
-  #gate-prog { font-size:.9rem; color:#555; } .gbar { margin-top:.6rem; height:6px; border-radius:6px; background:#e5e5e5; overflow:hidden; } .gbar i { display:block; height:100%; width:0; background:#1a73e8; transition:width .2s linear; }
+  /* ===== Schermata finta "Zucchetti" ===== */
+  #gate { position:fixed; inset:0; z-index:400; background:#fff; color:#222; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif; overflow:auto; transition:opacity .9s ease; }
+  .g-fake { max-width:420px; margin:0 auto; padding:3rem 1.3rem 3rem; line-height:1.55; }
+  .g-logo { width:160px; max-width:100%; margin:0 auto 1.5rem auto; display:block; }
+  .g-tag { font-size:.75rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#777; margin:0 0 .5rem; text-align:center; }
+  .g-fake h1 { font-size:1.6rem; line-height:1.2; margin:0 0 1.2rem; color:#b00; text-transform:uppercase; border-bottom:2px solid #b00; padding-bottom:10px; text-align:center; }
+  .g-fake p { font-size:1rem; margin:0 0 1rem; color:#444; text-align:justify; }
+  .g-data { margin:1.8rem 0; border:1px solid #ddd; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+  .g-data div { display:flex; justify-content:space-between; gap:1rem; padding:.8rem 1rem; font-size:.92rem; border-bottom:1px solid #eee; }
+  .g-data div:last-child { border-bottom:0; } .g-data span { color:#666; } .g-data b { text-align:right; color:#111; }
+  #gate-btn { width:100%; padding:1rem; border:0; border-radius:6px; background:#b00; color:#fff; font-size:1.05rem; font-weight:bold; text-transform:uppercase; cursor:pointer; box-shadow:0 4px 12px rgba(187,0,0,0.2); transition:transform 0.1s; }
+  #gate-btn:active { transform:scale(0.98); }
+  #gate-prog { font-size:.9rem; color:#555; font-weight:500; text-align:center; margin-top:1rem; } .gbar { margin-top:.6rem; height:6px; border-radius:6px; background:#e5e5e5; overflow:hidden; } .gbar i { display:block; height:100%; width:0; background:#b00; transition:width .2s linear; }
   .g-rev { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; background:radial-gradient(circle at 50% 42%,#FFE680,#F7C531 55%,#E39A0B); opacity:0; pointer-events:none; transition:opacity .5s ease; }
   #gate.rev .g-rev { opacity:1; }
   #g-flower { width:7rem; height:7rem; margin-bottom:1.2rem; }
@@ -144,6 +146,10 @@
   .btn-sun::after { content:''; position:absolute; top:0; bottom:0; width:40%; left:-60%; background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent); animation:sheen 3.4s ease-in-out infinite; }
   @keyframes sheen { 0%,55%{left:-60%} 100%{left:130%} }
   .answer { width:100%; padding:1.1rem; border-radius:1rem; font-size:1.15rem; }
+
+  /* Stile per il bottone della musica globale */
+  #bgm-toggle { position:fixed; top:15px; right:15px; z-index:500; border:0; border-radius:99px; padding:8px 14px; background:rgba(59,42,27,.78); color:#FFF9EA; font:500 .85rem 'Jost',sans-serif; cursor:pointer; transition:transform .2s; }
+  #bgm-toggle:active { transform:scale(.95); }
 
   /* ===== Finale ===== */
   #finale { min-height:100svh; display:flex; align-items:center; justify-content:center; padding:4rem 0; }
@@ -190,6 +196,13 @@
 </style>
 </head>
 <body>
+
+<!-- CANZONE SOTTOFONDO: Inserisci la tua canzone nella cartella assets e chiama il file "canzone.mp3" -->
+<audio id="bgMusic" loop preload="auto"><source src="assets/canzone.mp3" type="audio/mpeg"></audio>
+
+<!-- Bottone globale per accendere/spegnere la musica, nascosto all'inizio -->
+<button id="bgm-toggle" class="hidden">🎵 Musica: ON</button>
+
 <div id="bar"></div>
 
 <div id="bg" aria-hidden="true">
@@ -203,31 +216,32 @@
 </div>
 
 <div id="intro" aria-live="polite">
-  <h2 class="iline">Ci sono persone che non fanno nulla di straordinario…</h2>
-  <h2 class="iline">eppure rendono straordinaria la giornata di chi hanno vicino.</h2>
-  <h2 class="iline">Poi, un giorno, sei arrivata tu.</h2>
-  <h2 class="iline">Ho ripensato ai nostri momenti più belli…</h2>
-  <h2 class="iline">e volevo ricordarteli così, uno alla volta.</h2>
+  <h2 class="iline">Non sono mai stato un tipo da grandi discorsi…</h2>
+  <h2 class="iline">ma da quando ci sei tu, tutto ha preso una piega inaspettata.</h2>
+  <h2 class="iline">Ho messo in ordine un po' di ricordi…</h2>
+  <h2 class="iline">quelli che mi fanno sorridere di più.</h2>
+  <h2 class="iline">E volevo farli vedere anche a te.</h2>
   <div id="pl"><span id="pl-t">Preparo i ricordi… 0%</span><div class="plbar"><i id="pl-i"></i></div></div>
   <small>tocca per saltare</small>
 </div>
 
-<!-- SCHERMATA FINTA: "scusa per il danno alla macchina" (si disattiva con FAKE_GATE = false) -->
+<!-- SCHERMATA FINTA: "Zucchetti - Sinistro stradale" (si disattiva con FAKE_GATE = false) -->
 <div id="gate" class="hidden">
   <div class="g-fake">
-    <p class="g-tag">Nuovo messaggio · Sinistro stradale</p>
-    <h1>Scusami per il danno alla macchina</h1>
-    <p>Ti ho colpito mentre eri parcheggiato e non sono riuscito a rintracciarti. Mi dispiace davvero.</p>
-    <p>Qui sotto trovi i miei dati e quelli dell'assicurazione, così sistemiamo tutto nel modo più semplice possibile.</p>
+    <img src="assets/photos/zucchetti.jpg" alt="Zucchetti SpA" class="g-logo">
+    <p class="g-tag">Comunicazione di Sinistro · Flotta Aziendale</p>
+    <h1>Gestione Pratica Sinistro</h1>
+    <p>Gentile titolare del veicolo, La informiamo che un mezzo della nostra flotta aziendale è rimasto coinvolto in un sinistro con la Sua vettura in sosta.</p>
+    <p>Di seguito i riferimenti per procedere con le pratiche di constatazione tramite la nostra assicurazione Corporate. La invitiamo ad accedere ai documenti.</p>
     <div class="g-data">
-      <div><span>Conducente</span><b>Mario Rossi</b></div>
-      <div><span>Compagnia</span><b>Assicura Più S.p.A.</b></div>
+      <div><span>Conducente</span><b>Dirigente Zucchetti SpA</b></div>
+      <div><span>Compagnia</span><b>Flotta Corporate Zucchetti</b></div>
       <div><span>N. sinistro</span><b>2026-1010-48</b></div>
     </div>
-    <button id="gate-btn">Apri i documenti del sinistro</button>
-    <div id="gate-prog" class="hidden"><span id="gate-pct">Caricamento documenti… 0%</span><div class="gbar"><i id="gate-i"></i></div></div>
+    <button id="gate-btn">Accedi ai documenti del sinistro</button>
+    <div id="gate-prog" class="hidden"><span id="gate-pct">Connessione ai server Zucchetti… 0%</span><div class="gbar"><i id="gate-i"></i></div></div>
   </div>
-  <div class="g-rev"><div id="g-flower" aria-hidden="true"></div><h2>SCHERZAVO 😝</h2><p>Torniamo alle cose serie</p></div>
+  <div class="g-rev"><div id="g-flower" aria-hidden="true"></div><h2>PORCACCIO SCHERZAVO</h2><p>Torniamo a noi...</p></div>
 </div>
 
 <main id="main">
@@ -237,7 +251,7 @@
     <div class="glass card reveal" style="padding:2.2rem 1.5rem">
       <p class="kicker">una sorpresa per</p>
       <h1 id="hero-name" class="name" aria-label="Sandy">Sandy</h1>
-      <p>Ho raccolto alcuni dei nostri momenti più belli.<br>Scorri con calma: ognuno ha qualcosa da dirti.</p>
+      <p>Ho raccolto alcuni dei nostri momenti migliori.<br>Scorri con calma, non c'è fretta.</p>
     </div>
     <svg class="scroll" width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
   </section>
@@ -267,13 +281,12 @@
 
       <div id="success" class="hidden" style="width:100%">
         <h3 class="rv" data-t="100">Ha detto sì.</h3>
-        <p class="joy rv" data-t="900">Sandy, sono felicissimo. E non lo dico per dire.</p>
-        <p class="joy rv" data-t="3000">Da quel mazzo di fiori nel giorno del tuo compleanno, ogni cosa con te ha avuto un colore più vivo: un'alba aspettata insieme, un tuffo in Croazia, perfino un pronto soccorso.</p>
-        <p class="joy rv" data-t="6600">Mi piace chi sono quando sono con te. E ho voglia di scoprire tutto il resto, una pagina alla volta.</p>
-        <p class="joy rv" data-t="9400">Grazie per aver scelto me. Io ho già scelto te.</p>
-        <p class="joy rv" data-t="11200">(E la prossima spesa alla Plodine la offro io.)</p>
+        <p class="joy rv" data-t="900">Non vedevo l'ora che arrivasse questo momento</p>
+        <p class="joy rv" data-t="3000">Dal giorno in cui i nostri sguardi si incrociarono, tutto ha preso un ritmo diverso. Tra le prime uscite, i primi litigi, la prima vacanza, una laurea. Tutto è più bello se ci sei tu.</p>
+        <p class="joy rv" data-t="6600">Ti amo infinito + 2.</p>
+        <p class="joy rv" data-t="11200">(Apprezza l'originalità da informatico per chiederti di essere il tuo BOY)</p>
         <p class="date rv" style="margin-top:1.3rem" data-t="12200">10 · 10 · 2026</p>
-        <p class="rv" style="margin-top:.6rem;font:italic 500 1.3rem 'Playfair Display',serif" data-t="13000">Da oggi siamo ufficialmente noi 💛</p>
+        <p class="rv" style="margin-top:.6rem;font:italic 500 1.3rem 'Playfair Display',serif" data-t="13000">Da oggi ufficialmente Sandy e Endy 💛</p>
       </div>
     </div>
   </section>
@@ -281,12 +294,12 @@
   <section id="note" class="hidden">
     <div class="glass card slide-fade">
       <span class="num">P.S.</span>
-      <h2>Un bigliettino come alle elementari lo potevo fare anche io 😝👻</h2>
-      <p>Quello con scritto «Vuoi stare con me?» e le caselline Sì, No, Forse. Ma tu meriti qualcosa di più bello. Però una crocetta ce la metti lo stesso:</p>
+      <h2>Potevo farti un bigliettino di carta come alle elementari 😝👻</h2>
+      <p>Sai, quello con scritto «Vuoi stare con me?» e le tre caselline. Ma volevo fare le cose per bene. Una crocetta però ce la devi mettere lo stesso:</p>
       <div class="opts">
         <button class="opt" data-r="Segnato! Ufficialmente tuo 🌻"><span class="box"></span>Sì</button>
         <button class="opt" data-r="Ecco, questa è la risposta che speravo 🥹🌻"><span class="box"></span>Sì, con più entusiasmo</button>
-        <button class="opt" data-r="Mmh, questa casella sembra difettosa 😝 Riprova." data-no="1"><span class="box"></span>No</button>
+        <button class="opt" data-r="Mmh, questa casella è difettosa, porcaccio. Riprova." data-no="1"><span class="box"></span>No</button>
       </div>
       <p id="reply" class="hidden"></p>
       <div class="ps">
@@ -303,41 +316,69 @@ const $ = s => document.querySelector(s), wait = ms => new Promise(r => setTimeo
 const TRUNK_PAUSE = true;
 const HP = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
 
-/* ================= RICORDI (modifica qui) ================= */
+/* ================= RICORDI E TESTO INTERMEZZO ================= */
 const MEMORIES = [
   { img:'primi_fiori.jpg', alt:'I primi fiori', cap:'il tuo compleanno', h:'Un mazzo di fiori, senza sapere',
     p:'Non ricordo nemmeno perché scattai questa foto. Era il giorno del tuo compleanno e ti portai dei fiori, senza immaginare che il tuo arrivo sarebbe stato l\'imprevisto più bello di sempre.' },
   { img:'torneo.jpg', alt:'Dopo il torneo a Rustega', cap:'dopo il torneo, Rustega', h:'Dove ti vedo più felice',
     p:'Io e te dopo il torneo a Rustega. Non hai idea di quanto mi piaccia guardarti giocare: quando sei felice tu, lo sono anche io.' },
-  { img:'prima_alba.jpg', alt:'La nostra prima alba', cap:'la nostra prima alba', h:'L\'alba più corta della mia vita',
+  { img:'prima_alba.jpg', alt:'La nostra prima alba', cap:'la nostra prima alba', h:'L\'alba più corta',
     p:'Dopo il Pride siamo rimasti insieme fino alle 5 del mattino, anche se alle 7 dovevi alzarti per un altro dei tuoi tornei. Le ore sono sembrate minuti. Non sapevo che un\'alba potesse essere così bella, finché non l\'ho vista con te.' },
   { img:'prima_foto.jpg', alt:'La nostra prima foto', cap:'la nostra prima foto', h:'Dove tutto è iniziato',
-    p:'Non potevo ancora sapere quanto saresti diventata importante, ma nei tuoi occhi mi stavo già perdendo. È la prima foto che ho tenuto come ricordo di noi.' },
+    p:'Non potevo ancora sapere quanto saresti diventata importante, ma nei tuoi occhi mi stavo già perdendo. È la "prima" foto che ho stampato e tenuto come ricordo di noi.' },
   { video:'il_girasole_monco.mp4', cap:'il girasole monco', h:'Il girasole che hai scelto tu',
-    p:'A caccia di girasoli, e tra mille perfetti hai scelto proprio quello monco. È anche per queste piccole cose che mi fai sempre sorridere.' },
+    p:'A caccia di girasoli, e tra mille perfetti hai scelto proprio quello monco.',
+    quote:'Monco come la padrona.', who:'un vecchio saggio' },
   { img:'il_dito_rotto.jpg', alt:'Il braccialetto del pronto soccorso', cap:'pronto soccorso', h:'Nel bene e nel male',
-    p:'Il braccialetto del pronto soccorso. Mi hai scritto e sono corso subito da te. Esserci l\'uno per l\'altra significa anche questo: affrontare i piccoli imprevisti tenendosi per mano (anche con un dito rotto).' },
+    p:'Il braccialetto del pronto soccorso. Mi hai scritto e sono corso subito da te (anche se qualcuno mi aveva detto di non venire). Chissa se si è sistemato quel povero dito' },
   { img:'croazia.jpg', alt:'Noi in Croazia', cap:'Croazia', h:'Tuffi e Plodine',
     p:'I nostri tuffi in Croazia. Non so come fai, ma mi regali una felicità che non sapevo di poter avere. Perfino la spesa alla Plodine, con te, è diventata un ricordo bellissimo.' },
   { video:'croazia_video.mp4', cap:'un istante di noi', h:'Il mio posto preferito',
-    p:'Quegli attimi in cui il tempo si ferma e tu mi guardi. Torno sempre su questo video.' },
+    p:'Quegli attimi in cui il tempo si ferma e tu mi guardi. C\'è qualcosa in questo video che me lo fa sempre riguardare.' },
   { video:'strong_ovviamente.mp4', sound:true, cap:'strong, ovviamente', h:'Zero esitazioni',
-    p:'Il cameriere ci chiede se vogliamo lo shottino strong o light. E tu, senza un attimo di dubbio, rispondi nel modo più sicuro del mondo. Da quel giorno è una delle mie frasi preferite.',
+    p:'Il cameriere ci chiede se vogliamo lo shottino strong o light. E tu, senza un attimo di dubbio, rispondi nel modo più sicuro del mondo. Da quel giorno hai capito che Sandy Marini ha un limite',
     quote:'Strong, ovviamente.', who:'tu, senza esitare' },
   { img:'laurea_mia.jpg', alt:'La mia laurea a Padova', cap:'Padova, la mia laurea', h:'Un traguardo in due',
     p:'Averti accanto durante la magistrale a Padova ha reso quella giornata semplicemente perfetta, e mi ha fatto capire quanto vorrei condividere la vita con te.',
     quote:'Lo sai che ti sto odiando, vero?', who:'tu, quel giorno' },
   { video:'food_blogger.mp4', sound:true, cap:'food blogger', h:'Recensione ufficiale',
-    p:'Io e te che proviamo il matcha al McDonald\'s come due veri food blogger. Il verdetto sul matcha è ancora aperto. Su di te, invece, nessun dubbio.' },
+    p:'Io e te che proviamo il matcha al McDonald\'s come due veri food blogger. Il verdetto sul matcha è ancora aperto. Su di te, invece, mai stato un dubbio.' },
+  { video:'prima_partita.mp4', sound:true, cap:'la tua prima partita di coppa', h:'La tua prima partita di coppa',
+    p:'Partita con negatività, ma i miei 100 euro puntati sono al sicuro. Sei la mia MVP.',
+    quote:'Me la dedichi?', who:'tu, quel giorno' },
   { video:'mini_sandy.mp4', sound:true, cap:'mini Sandy', h:'Mini Sandy',
-    p:'Una festa di laurea, tu ripresa dall\'alto, e sembri davvero piccolissima. Mini Sandy: la più piccola della sala, ma quella che noto per prima.' }
+    p:'Una festa di laurea, tu ripresa dall\'alto, e sembri davvero piccolissima (già sei un tappo). La mia mini Sandy' }
 ];
-/* Dove cercare i file: nelle MEMORIES basta il nome. Il sito prova queste cartelle in ordine
-   (e anche maiuscole/minuscole diverse), quindi funziona anche se qualche file non è stato spostato. */
+
+/* I messaggi estrapolati dalla foto per spezzare il flusso tra le memorie */
+const TEXT_INTERLUDES = [
+  "Sei più speciale per me di quanto tu possa mai riuscire a capire, amore mio. A volte cerco le parole perfette per spiegarti cosa significhi per me, ma ogni parola sembra sempre troppo piccola.",
+  "Sei diventata una parte così bella e importante della mia vita che, sinceramente, non riesco a immaginare le mie giornate allo stesso modo senza di te. Non sei semplicemente una persona che fa parte della mia vita: sei diventata qualcuno profondamente legato al mio cuore.",
+  "Piano piano sei diventata parte di tutto. Sei la prima persona a cui voglio raccontare qualcosa quando mi succede qualcosa di bello, quella a cui penso nelle giornate difficili e quella che il mio cuore cerca naturalmente, senza che io me ne renda nemmeno conto.",
+  "Spero che tu ricordi sempre quanto sei importante per me, soprattutto nei giorni in cui senti di non essere abbastanza. Amo il tuo cuore, la tua personalità, la tua gentilezza, il tuo modo di pensare e tutti quei piccoli dettagli che ti rendono la persona che sei. Persino le cose che tu potresti vedere come difetti sono cose che io non vorrei mai cambiare di te.",
+  "La tua felicità conta davvero per me. Mi ritrovo a chiedermi se stai bene, se hai mangiato, se sei stanca o se c'è qualcosa che ti preoccupa. Non perché debba farlo, ma perché prendermi cura di te è diventato qualcosa che mi viene naturale.",
+  "Grazie per ogni momento che hai condiviso con me, per ogni sorriso, ogni risata, ogni conversazione e ogni ricordo che abbiamo creato insieme. Forse non te ne rendi conto, ma hai portato tantissima felicità nella mia vita e mi hai cambiato in modi per cui ti sarò sempre grato.",
+  "Mi hai fatto capire quanto possa essere bello tenere davvero a qualcuno e amarlo con tutto il cuore. E se c'è una cosa che voglio che tu ricordi sempre è questa: per me non sarai mai &quot;una persona qualunque&quot;. Sarai sempre qualcuno di speciale, qualcuno che non potrei mai sostituire.",
+  "Non importa dove ci porterà la vita, so soltanto che vorrei che tu fossi al mio fianco. Perché la verità è che non sei semplicemente importante per me: sei una persona a cui tengo davvero, una persona la cui felicità conta per me e una persona per cui sarò sempre grato. Sandy tu sei il mio 'lei è lei'",
+  "Ti amo più di quanto riuscirei mai a spiegare con le parole e spero che tu non dimentichi mai quanto profondamente sei amata, apprezzata e preziosa per me. Alla mia piccola stella che porto nei momenti in cui non ho luce❤️"
+];
+/* Una mappa per decidere dopo quale foto inserire ogni testo in modo spaziatamente perfetto */
+const TEXT_MAP = { 0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 7:6, 9:7, 10:8 };
+
 const DIRS = { img: ['assets/photos/', 'assets/', 'photos/', ''], video: ['assets/videos/', 'assets/', 'videos/', ''] };
-const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII'];
 const ORN = `<div class="orn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${HP}" fill="#D23B3B" opacity=".85"/></svg></div>`;
-$('#memories').innerHTML = MEMORIES.map((m, i) => `
+
+$('#memories').innerHTML = MEMORIES.map((m, i) => {
+  const textBlock = TEXT_MAP[i] !== undefined ? `
+    <div class="reveal" style="padding: 2.5rem 1.5rem; text-align:center; max-width: 28rem; margin: 0 auto; position:relative; z-index:10;">
+      <p style="font:italic 400 1.25rem/1.7 'Playfair Display',serif; color:#4a2f16; margin:0;">
+        ${TEXT_INTERLUDES[TEXT_MAP[i]]}
+      </p>
+    </div>
+  ` : '';
+
+  return `
   <section class="mem">
     <figure class="polaroid ${i % 2 ? 'tr' : 'tl'}">
       ${m.video ? `<video data-m="${i}" muted loop playsinline preload="none"><source src="${DIRS.video[0] + m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
@@ -350,14 +391,33 @@ $('#memories').innerHTML = MEMORIES.map((m, i) => `
       <p>${m.p}</p>
       ${m.quote ? `<blockquote class="quote">«${m.quote}»<small>— ${m.who}</small></blockquote>` : ''}
     </div>
-  </section>${i < MEMORIES.length - 1 ? ORN : ''}`).join('');
+  </section>
+  ${textBlock}
+  ${i < MEMORIES.length - 1 ? ORN : ''}`;
+}).join('');
 
 const vio = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: .4 });
 document.querySelectorAll('video').forEach(v => vio.observe(v));
 
-/* Precaricamento completo: foto e video vengono scaricati per intero PRIMA di mostrare i ricordi.
-   I video diventano file locali in memoria (blob), così partono subito, senza attese né buchi. */
-const MEDIA_TIMEOUT = 60000;                       // se la rete è lentissima, dopo 60s parte comunque
+/* Gestione globale del background music e toggle */
+const bgm = $('#bgMusic');
+const bgmToggle = $('#bgm-toggle');
+bgm.dataset.wasPlaying = "0";
+
+bgmToggle.addEventListener('click', () => {
+  if (bgm.paused) {
+    bgm.play().catch(()=>{});
+    bgmToggle.textContent = '🎵 Musica: ON';
+    bgm.dataset.wasPlaying = "1";
+  } else {
+    bgm.pause();
+    bgmToggle.textContent = '🔇 Musica: OFF';
+    bgm.dataset.wasPlaying = "0";
+  }
+});
+
+/* Precaricamento completo */
+const MEDIA_TIMEOUT = 60000;
 const frac = MEMORIES.map(() => 0);
 function updPl() {
   const pct = Math.round(frac.reduce((x, y) => x + y, 0) / frac.length * 100);
@@ -372,7 +432,6 @@ async function fetchBlob(url, onProg) {
   for (;;) { const { done, value } = await rd.read(); if (done) break; chunks.push(value); got += value.length; onProg(got / len); }
   return new Blob(chunks, { type: 'video/mp4' });
 }
-/* Ricerca tollerante: cartelle diverse, estensioni .jpg/.JPG/.mp4/.MP4/.mov, e nomi come mini_Sandy.MP4 */
 function candidates(file, kind) {
   const m = file.match(/^(.*)\.([^.\/]+)$/), base = m ? m[1] : file, ext = m ? m[2] : '';
   const exts = new Set([ext, ext.toLowerCase(), ext.toUpperCase()]);
@@ -396,12 +455,6 @@ async function findFile(file, kind) {
   return null;
 }
 const mediaStatus = MEMORIES.map(m => ({ file: m.img || m.video, res: '…', kb: 0 }));
-function showDebug() {      // apri il sito con ?debug in fondo al link per vedere quali file mancano
-  const d = document.createElement('div');
-  d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#000d;color:#fff;font:11px/1.5 monospace;padding:8px;max-height:60vh;overflow:auto';
-  d.innerHTML = mediaStatus.map(x => `<div style="color:${x.res === 'ok' ? '#8f8' : '#f88'}">${x.res} — ${x.file}${x.kb ? ' (' + x.kb + ' KB)' : ''}</div>`).join('') + '<div style="opacity:.7">tocca per chiudere</div>';
-  d.onclick = () => d.remove(); document.body.appendChild(d);
-}
 async function preloadAll() {
   await Promise.all(MEMORIES.map(async (m, i) => {
     const st = mediaStatus[i];
@@ -428,13 +481,20 @@ async function preloadAll() {
     } catch (e) { st.res = 'ERRORE'; }
     frac[i] = 1; updPl();
   }));
-  if (location.search.includes('debug')) showDebug();
 }
 const mediaP = preloadAll();
 const mediaReady = () => Promise.race([mediaP, wait(MEDIA_TIMEOUT)]);
-document.querySelectorAll('.snd').forEach(b => b.addEventListener('click', () => {
+
+/* Gestione dei bottoni audio video (mette in pausa la canzone di sottofondo) */
+document.querySelectorAll('.snd:not(#bgm-toggle)').forEach(b => b.addEventListener('click', () => {
   const v = b.parentElement.querySelector('video');
-  v.muted = !v.muted; if (!v.muted) v.play().catch(() => {});
+  v.muted = !v.muted;
+  if (!v.muted) {
+    v.play().catch(() => {});
+    if (!bgm.paused) { bgm.dataset.wasPlaying = "1"; bgm.pause(); } /* ferma musica sottofondo */
+  } else {
+    if (bgm.dataset.wasPlaying === "1") bgm.play().catch(() => {}); /* riaccende musica sottofondo */
+  }
   b.textContent = v.muted ? '🔊 Tocca per l\'audio' : '🔇 Silenzia';
 }));
 
@@ -481,7 +541,7 @@ bgf[2].innerHTML = flowerArt(16, '#C98A0A', .2);
   $('#field').innerHTML = `<svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice">${s}</svg>`;
 })();
 
-/* Luci "bokeh" morbide che fluttuano: atmosfera da ora d'oro */
+/* Luci "bokeh" */
 for (let i = 0; i < 14; i++) {
   const b = document.createElement('div'), sz = 40 + Math.random() * 110;
   b.className = 'bk';
@@ -489,7 +549,7 @@ for (let i = 0; i < 14; i++) {
   $('#bokeh').appendChild(b);
 }
 
-/* Parallasse dello sfondo + barra */
+/* Parallasse */
 let ticking = false;
 function onScroll() {
   const h = document.documentElement, max = h.scrollHeight - h.clientHeight, pr = max > 0 ? h.scrollTop / max : 0;
@@ -526,29 +586,40 @@ function petal() {
 }
 function startPetals(ms = 1200) { clearInterval(petalTimer); for (let i = 0; i < 5; i++) setTimeout(petal, i * 400); petalTimer = setInterval(petal, ms); }
 
-/* ================= Intro ================= */
+/* ================= Intro e avvio Musica ================= */
 const lines = [...document.querySelectorAll('.iline')];
 let introDone = false;
 function observe() {
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold: .2 });
   document.querySelectorAll('.reveal, .mem').forEach(el => io.observe(el));
 }
+
+function startBackgroundMusic() {
+  bgmToggle.classList.remove('hidden');
+  if (bgm.paused) {
+    bgm.play().catch(()=>{});
+    bgm.dataset.wasPlaying = "1";
+  }
+}
+
 function endIntro() {
   if (introDone) return; introDone = true;
   $('#pl').style.opacity = 0; $('#intro').style.opacity = 0;
   setTimeout(() => {
     $('#intro').style.display = 'none'; $('#main').style.opacity = 1; startPetals(); observe();
-    setTimeout(() => $('#hero-name').classList.add('blurin'), 500);   // il nome sboccia dopo l'intro
+    setTimeout(() => $('#hero-name').classList.add('blurin'), 500);
   }, 1300);
 }
 let skipping = false;
-$('#intro').addEventListener('click', async () => {      // tocco = salta l'intro, ma aspetta comunque i media
+$('#intro').addEventListener('click', async () => {
   skipping = true; lines.forEach(l => l.classList.remove('show'));
+  startBackgroundMusic(); /* Se salta l'intro con un click, accendiamo la musica */
   await mediaReady(); endIntro();
 });
-const FAKE_GATE = true;      // metti false per togliere la schermata finta del danno
+const FAKE_GATE = true;
 
 async function startIntro() {
+  startBackgroundMusic(); /* La musica parte appena inizia l'intro emozionale */
   await wait(700);
   for (let i = 0; i < lines.length && !skipping; i++) {
     lines[i].classList.add('show'); await wait(2900);
@@ -557,8 +628,6 @@ async function startIntro() {
   if (!skipping) { await mediaReady(); endIntro(); }
 }
 
-/* La schermata finta usa il tempo di attesa per scaricare davvero foto e video.
-   Quando è tutto pronto: "SCHERZAVO" e parte il sito vero. */
 function runGate() {
   const g = $('#gate'); g.classList.remove('hidden'); $('#pl').style.display = 'none';
   $('#g-flower').innerHTML = sunflower(16);
@@ -570,7 +639,7 @@ function runGate() {
       const iv = setInterval(() => {
         const real = frac.reduce((x, y) => x + y, 0) / frac.length * 100, el = (Date.now() - t0) / MIN * 95;
         const fin = ready && Date.now() - t0 >= MIN, pct = fin ? 100 : Math.min(real, el, 95);
-        $('#gate-i').style.width = pct + '%'; $('#gate-pct').textContent = `Caricamento documenti… ${Math.round(pct)}%`;
+        $('#gate-i').style.width = pct + '\%'; $('#gate-pct').textContent = `Connessione ai server Zucchetti… ${Math.round(pct)}%`;
         if (fin) { clearInterval(iv); res(); }
       }, 120);
     });
@@ -603,15 +672,15 @@ function typeIn(el, text, start, step) {
 $('#go-btn').onclick = async () => {
   if (started) return; started = true;
   $('#go-btn').classList.add('hidden');
-  if (TRUNK_PAUSE) {                       // pausa: lei va a vedere i regali nel bagagliaio
+  if (TRUNK_PAUSE) {
     await say('Prima dell\'ultima parte, c\'è una sorpresa per te 🎁'); await wait(3000);
     await say('Ti aspetta nel bagagliaio. Fatti aprire da me.'); await wait(1500);
     const tb = $('#trunk-btn'); tb.classList.remove('hidden'); tb.classList.add('slide-fade');
-    await new Promise(r => { tb.onclick = r; });   // aspetta che prema "Ho visto i regali"
+    await new Promise(r => { tb.onclick = r; });
     tb.classList.add('hidden');
     await say('Bene. Adesso torniamo a noi.'); await wait(2200);
   }
-  for (const t of ['Ho una domanda per te.', 'Ci penso da un po\'…', 'E oggi mi sembra il momento giusto.']) { await say(t); await wait(2600); }
+  for (const t of ['Ho una domanda per te.', 'Ci penso da un po\'…', 'E oggi mi sembrava il momento giusto.']) { await say(t); await wait(2600); }
   await say('Sei pronta?'); await wait(700);
   const b = $('#ready-btn'); b.classList.remove('hidden'); b.classList.add('slide-fade');
 };
@@ -619,7 +688,6 @@ $('#ready-btn').onclick = async () => {
   if (ready) return; ready = true;
   $('#ready-btn').classList.add('hidden');
   $('#fin-flower').classList.add('beat');
-  // Un po' di ansia positiva prima del via
   for (const t of ['Aspetta… mi tremano le mani 😅', 'Respira. Respira.', 'Ok. Ci siamo.']) { await say(t); await wait(2100); }
   $('#sus-line').style.opacity = 0; await wait(550);
   $('#sus-line').classList.add('hidden');
@@ -630,13 +698,13 @@ $('#ready-btn').onclick = async () => {
     const el = document.createElement('div'); el.className = 'cstep';
     el.innerHTML = `<span class="cn">${n}</span><span class="cc">${caps[i]}</span>`; c.appendChild(el);
     if (navigator.vibrate) navigator.vibrate(60);
-    await wait(1500); el.remove();      // ogni numero sparisce del tutto prima del successivo
+    await wait(1500); el.remove();
   }
   c.classList.add('hidden'); await wait(300);
   $('#suspense').classList.add('hidden');
   $('#question').classList.remove('hidden');
-  const l1 = $('#q-text .l1'); l1.textContent = 'Sandy,'; l1.classList.add('blurin');   // il nome sboccia
-  const t = typeIn($('#q-text .l2'), 'posso essere il tuo ragazzo?', 1900, 70);          // poi la domanda, lettera per lettera
+  const l1 = $('#q-text .l1'); l1.textContent = 'Sandy,'; l1.classList.add('blurin');
+  const t = typeIn($('#q-text .l2'), 'posso essere il tuo ragazzo?', 1900, 70);
   await wait(t + 1000);
   $('#answers').classList.add('on');
 };
@@ -659,7 +727,7 @@ async function sayYes() {
   ok.querySelectorAll('.rv').forEach(el => setTimeout(() => el.classList.add('in'), +el.dataset.t));
   explode(); setTimeout(explode, 900); startPetals(300); heartRain();
   await wait(5000); startPetals(1200);
-  await wait(12500);                      // l'ultima frase compare a 13s: resta qualche secondo per leggerla
+  await wait(12500);
   $('#note').classList.remove('hidden'); await wait(100);
   $('#note').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
