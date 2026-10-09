@@ -110,12 +110,15 @@
   .iline.show { opacity:1; filter:blur(0); transform:none; }
   #pl { position:absolute; bottom:calc(var(--sab) + 4rem); display:flex; flex-direction:column; align-items:center; gap:.5rem; font:400 .7rem 'Jost',sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#3B2A1B99; transition:opacity .8s ease; }
   .plbar { width:140px; height:3px; border-radius:3px; background:#3B2A1B1f; overflow:hidden; }
-  .plbar i { display:block; height:100%; width:0; background:linear-gradient(90deg,#F2B71E,#E39A0B); transition:width .35s ease; }
+  .plbar i { display:block; height:100%; width:35%; background:linear-gradient(90deg,#F2B71E,#E39A0B); animation:plSweep 1.5s ease-in-out infinite alternate; }
+  @keyframes plSweep { from{transform:translateX(0);opacity:.65} to{transform:translateX(92px);opacity:1} }
   #intro small { position:absolute; bottom:calc(var(--sab) + 1.4rem); font-size:.7rem; letter-spacing:.25em; text-transform:uppercase; color:#3B2A1B80; }
 
   /* ===== Schermata finta "Zucchetti" ===== */
   #gate { position:fixed; inset:0; z-index:400; height:100vh; height:100dvh; background:#fff; color:#222; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; overflow:auto; transition:opacity .9s ease; }
   .g-fake { width:100%; max-width:420px; margin:0 auto; line-height:1.55; padding:calc(var(--sat) + 2rem) max(1.1rem,env(safe-area-inset-right)) calc(var(--sab) + 2rem) max(1.1rem,env(safe-area-inset-left)); }
+  .g-fake { transition:opacity .25s ease; }
+  #gate.rev .g-fake { opacity:0; visibility:hidden; pointer-events:none; }
   .g-logo { width:150px; max-width:100%; margin:0 auto 1.3rem auto; display:block; }
   .g-tag { font-size:.72rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#777; margin:0 0 .4rem; text-align:center; }
   .g-fake h1 { font-size:1.5rem; line-height:1.2; margin:0 0 1rem; color:#b00; text-transform:uppercase; border-bottom:2px solid #b00; padding-bottom:8px; text-align:center; }
@@ -283,7 +286,7 @@
   :focus-visible { outline:3px solid var(--olive); outline-offset:3px; }
   @media (max-width:360px) { main { padding-left:.85rem; padding-right:.85rem; } .card h2 { font-size:1.5rem; } .card p { font-size:.97rem; } .quote { font-size:1.02rem; } .num::before,.num::after { width:16px; margin:0 6px; } }
   @media (prefers-reduced-motion:reduce) {
-    .bgh svg,.petal,.bg-heart,.spin,.scroll,.beat,.sw,.bgf .in,.bk,.btn-sun::after,.ember,.rays,.st-rays,.love-rays,.love-sun,.orn svg,.pt { animation:none !important; }
+    .bgh svg,.petal,.bg-heart,.spin,.scroll,.beat,.sw,.bgf .in,.bk,.btn-sun::after,.ember,.rays,.st-rays,.love-rays,.love-sun,.orn svg,.pt,#pl-i { animation:none !important; }
     .reveal,.slide-fade,.mem .polaroid,.mem .card,.rv { opacity:1; transform:none; animation:none; transition:none; }
     .mem .polaroid { transform:rotate(var(--rot)); } .mem .polaroid img,.mem .polaroid video { filter:none; }
     .ch,.iw { animation:none; opacity:1; filter:none; transform:none; } .name,.l1 { opacity:1; } .blurin { animation:none; }
@@ -315,7 +318,7 @@
   <h2 class="iline">Ho messo in ordine un po' di ricordi…</h2>
   <h2 class="iline">quelli che mi fanno sorridere di più.</h2>
   <h2 class="iline">E volevo farli vedere anche a te.</h2>
-  <div id="pl"><span id="pl-t">Preparo i ricordi… 0%</span><div class="plbar"><i id="pl-i"></i></div></div>
+  <div id="pl"><span id="pl-t">Preparo i ricordi…</span><div class="plbar"><i id="pl-i"></i></div></div>
   <small>tocca per saltare</small>
 </div>
 
@@ -501,7 +504,7 @@ $('#memories').innerHTML = MEMORIES.map((m, i) => {
   <section class="mem">
     <figure class="polaroid ${i % 2 ? 'tr' : 'tl'}">
       ${m.video ? `<video data-m="${i}" muted loop playsinline webkit-playsinline disablepictureinpicture preload="none"><source src="${DIRS.video[0] + m.video}" type="video/mp4"></video>${m.sound ? '<button class="snd" type="button">🔊 Tocca per l\'audio</button>' : ''}`
-                : `<img data-m="${i}" src="${DIRS.img[0] + m.img}" alt="${m.alt}" decoding="async">`}
+                : `<img data-m="${i}" loading="lazy" decoding="async" fetchpriority="low" src="${DIRS.img[0] + m.img}" alt="${m.alt}">`}
       <figcaption>${m.cap}</figcaption>
     </figure>
     <div class="glass card">
@@ -595,62 +598,68 @@ document.querySelectorAll('.snd').forEach(b => b.addEventListener('click', () =>
   b.textContent = v.muted ? '🔊 Tocca per l\'audio' : '🔇 Silenzia';
 }));
 
-/* ================= Caricamento di foto e video (durante la schermata finta) ================= */
-const MEDIA_TIMEOUT = 60000;
-const frac = MEMORIES.map(() => 0);
-function updPl() {
-  const pct = Math.round(frac.reduce((x, y) => x + y, 0) / frac.length * 100);
-  $('#pl-i').style.width = pct + '%'; $('#pl-t').textContent = pct < 100 ? `Preparo i ricordi… ${pct}%` : 'Tutto pronto 🌻';
-}
-async function fetchBlob(url, onProg) {
-  const r = await fetch(url); if (!r.ok) throw new Error(r.status);
-  const len = +r.headers.get('content-length') || 0;
-  if (!r.body || !len) { const b = await r.blob(); onProg(1); return b; }
-  const rd = r.body.getReader(), chunks = []; let got = 0;
-  for (;;) { const { done, value } = await rd.read(); if (done) break; chunks.push(value); got += value.length; onProg(got / len); }
-  return new Blob(chunks, { type: 'video/mp4' });
-}
-function candidates(file, kind) {      // prova cartelle diverse e maiuscole/minuscole (es. mini_Sandy.MP4)
+/* ================= Media sicuri su iPhone =================
+   Nessun download preventivo di tutti i video e nessun Blob in RAM.
+   I video restano preload="none" e vengono richiesti solo quando visibili.
+   La ricerca di percorsi alternativi parte soltanto se il file primario fallisce. */
+function candidates(file, kind) {
   const m = file.match(/^(.*)\.([^.\/]+)$/), base = m ? m[1] : file, ext = m ? m[2] : '';
   const exts = new Set([ext, ext.toLowerCase(), ext.toUpperCase()]);
   (kind === 'img' ? ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'] : ['mp4', 'MP4', 'mov', 'MOV', 'm4v']).forEach(x => exts.add(x));
   const cap = x => x.charAt(0).toUpperCase() + x.slice(1), w = base.split('_');
   const bases = new Set([base, base.toLowerCase(), w.map((x, i) => i ? cap(x) : x).join('_'), w.map(cap).join('_')]);
-  const out = []; for (const d of DIRS[kind]) for (const b of bases) for (const e of exts) out.push(d + b + '.' + e); return out;
+  const out = [];
+  for (const d of DIRS[kind]) for (const b of bases) for (const e of exts) out.push(d + b + '.' + e);
+  return [...new Set(out)];
 }
 function exists(u, kind) {
-  if (kind === 'img') return new Promise(res => { const im = new Image(); im.onload = () => res(true); im.onerror = () => res(false); im.src = u; });
-  return fetch(u, { method:'HEAD' }).then(r => r.ok && !/text\/html/.test(r.headers.get('content-type') || '')).catch(() => false);
+  if (kind === 'img') return new Promise(res => {
+    const im = new Image(); im.onload = () => res(true); im.onerror = () => res(false); im.src = u;
+  });
+  return fetch(u, { method:'HEAD', cache:'no-store' })
+    .then(r => r.ok && !/text\/html/.test(r.headers.get('content-type') || ''))
+    .catch(() => false);
 }
-async function findFile(file, kind) {
-  const list = candidates(file, kind), N = 6;
-  for (let i = 0; i < list.length; i += N) { const grp = list.slice(i, i + N), res = await Promise.all(grp.map(c => exists(c, kind))); const k = res.indexOf(true); if (k >= 0) return grp[k]; }
+async function findFile(file, kind, failedUrl = '') {
+  const list = candidates(file, kind).filter(u => u !== failedUrl);
+  const N = 4;
+  for (let i = 0; i < list.length; i += N) {
+    const grp = list.slice(i, i + N), res = await Promise.all(grp.map(c => exists(c, kind)));
+    const k = res.indexOf(true); if (k >= 0) return grp[k];
+  }
   return null;
 }
-async function preloadAll() {
-  await Promise.all(MEMORIES.map(async (m, i) => {
-    try {
-      if (m.img) {
-        const w = await findFile(m.img, 'img'), el = document.querySelector(`img[data-m="${i}"]`);
-        if (w && el && el.getAttribute('src') !== w) el.src = w;
-      } else {
-        const v = document.querySelector(`video[data-m="${i}"]`); let blob = null;
-        const found = await findFile(m.video, 'video');
-        if (found) { try { blob = await fetchBlob(found, f => { frac[i] = f * .97; updPl(); }); } catch (e) {} }
-        if (!blob) { v.preload = 'auto'; v.load(); }
-        else {
-          const url = URL.createObjectURL(new Blob([blob], { type:'video/mp4' }));
-          const s0 = v.querySelector('source'); if (s0) s0.remove();
-          v.preload = 'auto'; v.src = url;
-          await new Promise(res => { v.onloadedmetadata = () => res(true); v.onerror = () => res(false); setTimeout(() => res(null), 2500); v.load(); });
-        }
+function installMediaFallbacks() {
+  document.querySelectorAll('img[data-m]').forEach(img => {
+    let tried = false;
+    img.addEventListener('error', async () => {
+      if (tried) return; tried = true;
+      const m = MEMORIES[Number(img.dataset.m)];
+      if (!m || !m.img) return;
+      const failed = img.getAttribute('src') || '';
+      const found = await findFile(m.img, 'img', failed);
+      if (found && img.isConnected) img.src = found;
+    });
+  });
+  document.querySelectorAll('video[data-m]').forEach(video => {
+    let tried = false;
+    video.addEventListener('error', async () => {
+      if (tried) return; tried = true;
+      const m = MEMORIES[Number(video.dataset.m)];
+      if (!m || !m.video) return;
+      const source = video.querySelector('source');
+      const failed = source ? source.getAttribute('src') || '' : video.getAttribute('src') || '';
+      const found = await findFile(m.video, 'video', failed);
+      if (!found || !video.isConnected) return;
+      if (source) source.src = found; else video.src = found;
+      video.load();
+      if (video.getBoundingClientRect().bottom > 0 && video.getBoundingClientRect().top < window.innerHeight) {
+        video.play().catch(() => {});
       }
-    } catch (e) {}
-    frac[i] = 1; updPl();
-  }));
+    });
+  });
 }
-const mediaP = preloadAll();
-const mediaReady = () => Promise.race([mediaP, wait(MEDIA_TIMEOUT)]);
+installMediaFallbacks();
 
 /* ================= Girasoli ================= */
 function sunflower(n = 21, bloom = false, seeds = 70) {
@@ -765,11 +774,11 @@ function endIntro() {
     setTimeout(() => $('#hero-name').classList.add('blurin'), 700);
   }, 1300);
 }
-$('#intro').addEventListener('click', async () => { skipping = true; lines.forEach(l => l.classList.remove('show')); unlockAudio(); await mediaReady(); endIntro(); });
+$('#intro').addEventListener('click', () => { skipping = true; lines.forEach(l => l.classList.remove('show')); unlockAudio(); endIntro(); });
 async function startIntro() {
   await wait(700);
   for (let i = 0; i < lines.length && !skipping; i++) { lines[i].classList.add('show'); await wait(2900); if (i < lines.length - 1) { lines[i].classList.remove('show'); await wait(1000); } }
-  if (!skipping) { await mediaReady(); endIntro(); }
+  if (!skipping) endIntro();
 }
 function runGate() {
   const g = $('#gate'); g.classList.remove('hidden'); $('#pl').style.display = 'none';
@@ -777,16 +786,16 @@ function runGate() {
   $('#gate-btn').onclick = async () => {
     unlockAudio(); requestWake();
     $('#gate-btn').classList.add('hidden'); $('#gate-prog').classList.remove('hidden');
-    const t0 = Date.now(), MIN = 4500; let ready = false;
-    mediaReady().then(() => ready = true);
+    const t0 = Date.now(), MIN = 4200;
     await new Promise(res => {
       const iv = setInterval(() => {
-        const real = frac.reduce((x, y) => x + y, 0) / frac.length * 100, el = (Date.now() - t0) / MIN * 95, fin = ready && Date.now() - t0 >= MIN, pct = fin ? 100 : Math.min(real, el, 95);
-        $('#gate-i').style.width = pct + '%'; $('#gate-pct').textContent = `Connessione ai server Zucchetti… ${Math.round(pct)}%`;
-        if (fin) { clearInterval(iv); res(); }
-      }, 120);
+        const pct = Math.min(100, Math.round((Date.now() - t0) / MIN * 100));
+        $('#gate-i').style.width = pct + '%';
+        $('#gate-pct').textContent = `Connessione ai server Zucchetti… ${pct}%`;
+        if (pct >= 100) { clearInterval(iv); res(); }
+      }, 100);
     });
-    await wait(500);
+    await wait(250);
     g.classList.add('rev'); if (navigator.vibrate) navigator.vibrate([80, 60, 80]);
     await wait(3800);
     g.style.opacity = 0; await wait(900); g.style.display = 'none';
